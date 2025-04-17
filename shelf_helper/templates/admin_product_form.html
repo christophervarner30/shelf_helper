@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ 'Edit' if form and form.name.data else 'Add' }} Product - Shelf Helper</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="logo"></div>
+    <div class="container">
+        <h2>{{ 'Edit' if form and form.name.data else 'Add' }} Product</h2>
+        <form method="post">
+            {{ form.hidden_tag() }}
+            <label>{{ form.name.label }}</label>
+            {{ form.name(size=32) }}<br>
+            {% for error in form.name.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            <label>{{ form.description.label }}</label>
+            {{ form.description(size=64) }}<br>
+            {% for error in form.description.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            <label>{{ form.price.label }}</label>
+            {{ form.price(step="0.01") }}<br>
+            {% for error in form.price.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            <label>{{ form.shelf_location.label }}</label>
+            {{ form.shelf_location(size=32) }}<br>
+            {% for error in form.shelf_location.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            <label>{{ form.stock.label }}</label>
+            {{ form.stock() }}<br>
+            {% for error in form.stock.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            <label>{{ form.category.label }}</label>
+            {{ form.category(size=32) }}<br>
+            {% for error in form.category.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            <label>{{ form.high_shelf.label }}</label>
+            {{ form.high_shelf() }}<br>
+            <label>{{ form.image_url.label }}</label>
+            {{ form.image_url(size=64) }}<br>
+            {% for error in form.image_url.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            <button type="submit">{{ 'Update' if form and form.name.data else 'Add' }} Product</button>
+        </form>
+        <a href="/admin">Back to Admin Dashboard</a>
+    </div>
+</body>
+</html>

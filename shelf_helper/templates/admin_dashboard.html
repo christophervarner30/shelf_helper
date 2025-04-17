@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ _('Admin Dashboard - Shelf Helper') }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="logo"></div>
+    <div class="container">
+        <h2>{{ _('Admin Dashboard') }}</h2>
+        <h3>{{ _('Orders') }}</h3>
+        <table class="order-table">
+            <tr>
+                <th>{{ _('Date') }}</th>
+                <th>{{ _('Product') }}</th>
+                <th>{{ _('User') }}</th>
+                <th>{{ _('Store') }}</th>
+                <th>{{ _('Customer Name') }}</th>
+            </tr>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>{{ _(order.product_id) }}</td>
+                <td>{{ order.user.username if order.user else _('Guest') }}</td>
+                <td>{{ _(order.store) }}</td>
+                <td>{{ _(order.customer_name) }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <h3>{{ _('Product Management') }}</h3>
+        <a href="/admin/add_product">{{ _('Add New Product') }}</a>
+        <table class="product-table">
+            <tr>
+                <th>{{ _('Name') }}</th>
+                <th>{{ _('Category') }}</th>
+                <th>{{ _('High Shelf') }}</th>
+                <th>{{ _('Stock') }}</th>
+                <th>{{ _('Price') }}</th>
+                <th>{{ _('Actions') }}</th>
+            </tr>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.category }}</td>
+                <td>{% if product.high_shelf %}{{ _('Yes') }}{% else %}{{ _('No') }}{% endif %}</td>
+                <td>{{ product.stock }}</td>
+                <td>${{ '%.2f'|format(product.price) }}</td>
+                <td>
+                    <a href="/admin/edit_product/{{ product.id }}">{{ _('Edit') }}</a> |
+                    <a href="/admin/delete_product/{{ product.id }}" onclick="return confirm('{{ _('Delete this product?') }}');">{{ _('Delete') }}</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <a href="/">{{ _('Back to Shop') }}</a>
+    </div>
+</body>
+</html>

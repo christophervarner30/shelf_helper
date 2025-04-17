@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ _('Shelf Helper') }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="logo"></div>
+    <div class="accessibility-bar" style="margin-bottom:18px;">
+        <button onclick="toggleAccessibility('high-contrast')" aria-pressed="false" aria-label="{{ _('Toggle high contrast mode') }}">{{ _('High Contrast') }}</button>
+        <button onclick="toggleAccessibility('large-text')" aria-pressed="false" aria-label="{{ _('Toggle large text mode') }}">{{ _('Large Text') }}</button>
+        <button onclick="startVoiceSearch()" aria-label="{{ _('Voice search') }}" style="margin-left:12px;background:var(--brand-accent);"><span aria-hidden="true">🎤</span> {{ _('Voice Search') }}</button>
+        <form action="/set_language/" method="get" id="langForm" style="display:inline;margin-left:18px;">
+            <label for="langSelect" style="font-weight:600;">🌐</label>
+            <select id="langSelect" name="lang" onchange="changeLang(this)">
+                <option value="en" {% if current_locale == 'en' %}selected{% endif %}>{{ _('English') }}</option>
+                <option value="es" {% if current_locale == 'es' %}selected{% endif %}>{{ _('Español') }}</option>
+            </select>
+        </form>
+    </div>
+    <div class="background-accent"></div>
+    <div class="container">
+        <h1>{{ _('Smart Shelf Helper') }}</h1>
+        <div class="category-filter">
+            <a href="/" class="category-btn {% if not request.args.get('category') and not request.args.get('high_shelf') %}active{% endif %}">{{ _('All') }}</a>
+            <a href="/?high_shelf=1" class="category-btn {% if request.args.get('high_shelf') %}active{% endif %}">{{ _('High Shelf') }}</a>
+            {% for category in categories %}
+                <a href="/?category={{ category }}" class="category-btn {% if request.args.get('category') == category %}active{% endif %}">{{ _(category) }}</a>
+            {% endfor %}
+        </div>
+        <!-- Search and Filters -->
+        <form id="searchForm" action="/" method="get" class="search-filter-bar sticky-search-bar" style="display:flex;gap:12px;align-items:center;margin-bottom:24px;position:sticky;top:0;background:rgba(255,255,255,0.95);z-index:10;padding:12px 0;box-shadow:0 2px 8px rgba(0,0,0,0.07);backdrop-filter:blur(4px);">
+            <input type="text" name="search" id="searchInput" placeholder="Search products..." value="{{ request.args.get('search', '') }}" style="padding:8px 14px;border-radius:6px;border:1px solid #ddd;min-width:200px;" aria-label="Search products">
+            <select name="category" style="padding:8px 14px;border-radius:6px;border:1px solid #ddd;" aria-label="Filter by category">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                <option value="{{ category }}" {% if request.args.get('category') == category %}selected{% endif %}>{{ _(category) }}</option>
+                {% endfor %}
+            </select>
+            <select name="shelf_location" style="padding:8px 14px;border-radius:6px;border:1px solid #ddd;" aria-label="Filter by shelf location">
+                <option value="">All Shelves</option>
+                {% for shelf in shelf_locations %}
+                <option value="{{ shelf }}" {% if request.args.get('shelf_location') == shelf %}selected{% endif %}>{{ shelf }}</option>
+                {% endfor %}
+            </select>
+            <input type="number" name="min_price" step="0.01" placeholder="Min $" value="{{ request.args.get('min_price', '') }}" style="width:80px;padding:8px 10px;border-radius:6px;border:1px solid #ddd;" aria-label="Minimum price">
+            <input type="number" name="max_price" step="0.01" placeholder="Max $" value="{{ request.args.get('max_price', '') }}" style="width:80px;padding:8px 10px;border-radius:6px;border:1px solid #ddd;" aria-label="Maximum price">
+            <select name="stock_status" style="padding:8px 14px;border-radius:6px;border:1px solid #ddd;" aria-label="Filter by stock status">
+                <option value="">All Stock</option>
+                <option value="in" {% if request.args.get('stock_status') == 'in' %}selected{% endif %}>In Stock</option>
+                <option value="out" {% if request.args.get('stock_status') == 'out' %}selected{% endif %}>Out of Stock</option>
+            </select>
+            <button type="submit" style="padding:8px 18px;border-radius:6px;background:var(--brand-accent);color:#fff;border:none;font-weight:600;">Search</button>
+        </form>
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="loading-overlay" style="display:none;"><div class="spinner"></div></div>
+        <!-- Lightbox Modal -->
+        <div id="lightboxOverlay" class="lightbox-overlay" style="display:none;">
+            <img id="lightboxImg" src="" alt="" tabindex="0">
+            <span class="lightbox-close" tabindex="0" aria-label="Close">&times;</span>
+        </div>
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card" tabindex="0" aria-label="{{ product.name }}: {{ product.description }}">
+                {% if product.image_url %}
+                <img src="{{ product.image_url }}" alt="{{ product.name }}" style="cursor:zoom-in;" tabindex="0">
+                {% endif %}
+                <div class="product-content">
+                    {% if product.high_shelf %}
+                    <div class="product-category" style="background:rgba(255,59,59,0.18); color:#ff3b3b; font-weight:bold;">{{ _('High Shelf') }}</div>
+                    {% else %}
+                    <div class="product-category">{{ product.category }}</div>
+                    {% endif %}
+                    <h3>{{ product.name }}</h3>
+                    <div class="description">{{ product.description }}</div>
+                    <div class="price">${{ '%.2f'|format(product.price) }}</div>
+                    <div class="location">{{ _('Shelf Location:') }} {{ product.shelf_location }}</div>
+                    <div class="stock {% if product.stock > 0 %}in-stock{% else %}out-of-stock{% endif %}">
+                        {% if product.stock > 0 %}{{ _('In Stock') }}{% else %}{{ _('Out of Stock') }}{% endif %}
+                    </div>
+                    <button class="select-btn" {% if product.stock == 0 %}disabled{% endif %}
+                        onclick="openOrderModal({{ product.id }}, '{{ product.name }}', {{ product.price }})">
+                        {{ _('Select') }}
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- Empty state will be injected by JS if needed -->
+    </div>
+
+    <!-- Order Modal -->
+    <div id="orderModal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <span class="close" onclick="closeOrderModal()">&times;</span>
+        <h2>{{ _('Order Product') }}</h2>
+        <form id="orderForm">
+          <input type="hidden" name="product_id" id="modalProductId">
+          <label for="modalProductName">{{ _('Product:') }}</label>
+          <input type="text" id="modalProductName" readonly><br>
+          <label for="modalCustomerName">{{ _('Your Name:') }}</label>
+          <input type="text" name="customer_name" id="modalCustomerName" required><br>
+          <label for="modalStore">{{ _('Pickup Store:') }}</label>
+          <select name="store" id="modalStore" required>
+            <option value="">{{ _('Select a store...') }}</option>
+            <option value="Walmart">{{ _('Walmart') }}</option>
+            <option value="Target">{{ _('Target') }}</option>
+            <option value="Costco">{{ _('Costco') }}</option>
+          </select><br>
+          <button type="submit">{{ _('Place Order') }}</button>
+        </form>
+        <div id="orderConfirmation" style="display:none;margin-top:12px;"></div>
+      </div>
+    </div>
+
+    <script>
+    function toggleAccessibility(mode) {
+        let body = document.body;
+        if (mode === 'high-contrast') {
+            body.classList.toggle('accessibility-high-contrast');
+        } else if (mode === 'large-text') {
+            body.classList.toggle('accessibility-large-text');
+        }
+    }
+
+    // Voice search using Web Speech API
+    function startVoiceSearch() {
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+            alert('{{ _('Sorry, your browser does not support speech recognition.') }}');
+            return;
+        }
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript;
+            document.getElementById('searchInput').value = transcript;
+            document.getElementById('searchForm').submit();
+        };
+        recognition.onerror = function(event) {
+            alert('{{ _('Voice search error:') }} ' + event.error);
+        };
+        recognition.start();
+    }
+
+    function openOrderModal(id, name, price) {
+      document.getElementById('orderModal').style.display = 'block';
+      document.getElementById('modalProductId').value = id;
+      document.getElementById('modalProductName').value = name;
+      document.getElementById('modalCustomerName').value = '';
+      document.getElementById('modalStore').selectedIndex = 0;
+      document.getElementById('orderConfirmation').style.display = 'none';
+      document.getElementById('orderForm').style.display = 'block';
+    }
+    function closeOrderModal() {
+      document.getElementById('orderModal').style.display = 'none';
+    }
+    document.getElementById('orderForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const data = new FormData(form);
+      const response = await fetch('/order', {method:'POST', body:data});
+      const result = await response.json();
+      if(result.success) {
+        document.getElementById('orderForm').style.display = 'none';
+        document.getElementById('orderConfirmation').innerHTML = `{{ _('Order placed for pickup at') }} <strong>${data.get('store')}</strong>!`;
+        document.getElementById('orderConfirmation').style.display = 'block';
+      }
+    };
+
+    function changeLang(sel) {
+        window.location.href = '/set_language/' + sel.value;
+    }
+    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

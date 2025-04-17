@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff View - Shelf Helper</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Staff Dashboard</h1>
+        <div class="orders-list">
+            {% for order in orders %}
+            <div class="order-card" id="order-{{ order.id }}">
+                <div class="order-content">
+                    <h3>Order #{{ order.id }}</h3>
+                    <div class="order-details">
+                        <p><strong>Customer:</strong> {{ order.customer_name }}</p>
+                        <p><strong>Product:</strong> {{ order.product.name }}</p>
+                        <p><strong>Location:</strong> {{ order.product.shelf_location }}</p>
+                        <p><strong>Price:</strong> ${{ "%.2f"|format(order.product.price) }}</p>
+                    </div>
+                    <button onclick="completeOrder({{ order.id }})" class="complete-btn">
+                        Mark Complete
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+            {% if not orders %}
+            <div class="no-orders">
+                <p>No pending orders</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='staff.js') }}"></script>
+</body>
+</html>

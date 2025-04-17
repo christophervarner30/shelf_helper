@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ _('Register - Shelf Helper') }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="logo"></div>
+    <div class="container">
+        <h2>{{ _('Register') }}</h2>
+        <form method="post">
+            {{ form.hidden_tag() }}
+            <label>{{ form.username.label }}</label>
+            {{ form.username(size=32) }}<br>
+            {% for error in form.username.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            <label>{{ form.email.label }}</label>
+            {{ form.email(size=32) }}<br>
+            {% for error in form.email.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            <label>{{ form.password.label }}</label>
+            {{ form.password(size=32) }}<br>
+            {% for error in form.password.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            <button type="submit">{{ _('Register') }}</button>
+        </form>
+        <p>{{ _('Already have an account?') }} <a href="{{ url_for('auth.login') }}">{{ _('Login here') }}</a>.</p>
+    </div>
+</body>
+</html>
