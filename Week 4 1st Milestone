@@ -1,0 +1,35 @@
+# Shelf Helper SRS – Week 4 Milestone
+
+## Milestone 1 Reflection: Bringing Shelf Helper to Life
+
+### What I Accomplished
+This milestone marks a big step forward for Shelf Helper. I now have a real, working web app that lets users browse products, search and filter by shelf or category, and even place orders for pickup at stores like Walmart, Costco, or Target. On top of that, there’s an admin dashboard where I (or any admin) can add, edit, or remove products and keep track of orders—all from a simple, clean interface.
+
+Getting here took a lot of problem-solving: syncing the database with the code, handling errors, and making sure the app runs smoothly every time. I also made the site more accessible, with features like high-contrast mode, large text, and even voice search. Plus, users can switch between English and Spanish, making the app friendly for more people.
+
+### Highlights
+- **You can actually use it!** The Shelf Helper app is up and running, not just a pile of code.
+- **Easy browsing and searching.** You can filter products by category, shelf location (like "3rd Shelf"), or just search by name.
+- **Ordering works.** Users can place an order for pickup, and admins can see/manage those orders.
+- **Admin dashboard.** Admins have full control over the product list and orders.
+- **No more database headaches.** The database is in sync, with a realistic set of products for demo/testing.
+- **Accessibility and language.** High contrast, large text, and Spanish support are all built in.
+
+### What Changed Since Last Time
+- Built out the main Flask app with Product and Order models.
+- Created admin login and dashboard for managing products and orders.
+- Added searching, filtering, and ordering features for users.
+- Fixed database errors and made sure the schema matches the code.
+- Populated the database with a good mix of sample products.
+- Improved the user interface and accessibility.
+
+### What’s Next
+- Let users register and log in (not just admins).
+- Add real product images and make image handling better.
+- Make order tracking more robust.
+- Gather feedback and keep improving Shelf Helper!
+
+---
+
+This milestone is about showing that Shelf Helper isn’t just an idea, it’s a real, working app with a solid foundation for future growth. Thanks.
+
