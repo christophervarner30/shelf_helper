@@ -9,5 +9,5 @@
 - Project and environment setup confirmed; all dependencies installed.
 
 ## Progress Summary (Week 5)
-This week, I expanded the Shelf Helper app by adding essential user management features such as password reset and profile management. I improved security and usability, and ensured the project is stable and easy to run locally. The app is on track for a Minimum Viable Product, with core authentication and error handling complete.
+This week, I expanded the Shelf Helper app by adding essential user management features such as password reset and profile management. I improved security and usability, and ensured the project is stable and easy to run locally. The app is on track, with core authentication and error handling complete.
 
