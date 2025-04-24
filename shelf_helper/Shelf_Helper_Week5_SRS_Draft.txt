@@ -1,0 +1,13 @@
+﻿
+## Changelog (Week 5)
+- Added password reset functionality using secure tokens and email.
+- Implemented user profile management (update email, change password).
+- Integrated Flask-WTF for secure form validation.
+- Added custom error pages for 404 and 500 errors.
+- Ensured all passwords are securely hashed.
+- Removed Flask-Migrate due to Windows compatibility issues; database managed manually.
+- Project and environment setup confirmed; all dependencies installed.
+
+## Progress Summary (Week 5)
+This week, I expanded the Shelf Helper app by adding essential user management features such as password reset and profile management. I improved security and usability, and ensured the project is stable and easy to run locally. The app is on track for a Minimum Viable Product, with core authentication and error handling complete.
+
