@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ _('Admin Login - Shelf Helper') }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">Shelf Helper</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="/dashboard">Dashboard</a></li>
+            {% if current_user.is_authenticated %}
+              <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+            {% else %}
+              <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+              <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="logo"></div>
+    <div class="container">
+        <h2>{{ _('Admin Login') }}</h2>
+        <form method="post">
+          {% if form.errors %}
+            <div class="alert alert-danger">
+              <ul>
+              {% for field, errors in form.errors.items() %}
+                {% for error in errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+            <input type="text" name="username" placeholder="{{ _('Admin Username') }}" required><br>
+            <input type="password" name="password" placeholder="{{ _('Password') }}" required><br>
+            <button type="submit">{{ _('Login') }}</button>
+        </form>
+        <a href="/">{{ _('Back to Shop') }}</a>
+    </div>
+</body>
+</html>
