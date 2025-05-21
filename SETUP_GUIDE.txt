@@ -1,0 +1,36 @@
+Shelf Helper Setup Guide
+=======================
+
+1. Create a virtual environment (recommended):
+   python -m venv venv
+
+2. Activate the virtual environment:
+   On Windows:
+       .\venv\Scripts\activate
+   On Mac/Linux:
+       source venv/bin/activate
+
+3. Install dependencies:
+   pip install -r requirements.txt
+
+4. (Optional) Copy the example environment file:
+   cp .env.example .env
+   # Or manually set the SECRET_KEY and DB URI in your environment
+
+5. Initialize the database:
+   python app.py
+   # The database will be created automatically on first run.
+
+6. Add sample products (optional):
+   python add_sample_products.py
+
+7. Run the application:
+   python app.py
+
+8. Access the app:
+   Customer: http://localhost:5000
+   Staff:    http://localhost:5000/staff
+
+If you encounter errors after installing Flask or dependencies, ensure you are using the correct Python environment and all packages are installed with compatible versions as pinned in requirements.txt.
+
+For troubleshooting, copy any error message and ask for help.
