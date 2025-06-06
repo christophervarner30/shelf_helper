@@ -1,0 +1,129 @@
+/* Custom styles for Shelf Helper presentation */
+
+:root {
+    --brand-primary: #2c3e50;
+    --brand-accent: #e74c3c;
+    --text-color: #333;
+    --background-color: #f5f5f5;
+    --slide-background: #fff;
+}
+
+.reveal {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+}
+
+.reveal h1, .reveal h2, .reveal h3 {
+    color: var(--brand-primary);
+    margin-bottom: 0.5em;
+}
+
+.reveal h1 {
+    font-size: 2.5em;
+}
+
+.reveal h2 {
+    font-size: 1.8em;
+    border-bottom: 2px solid var(--brand-accent);
+    padding-bottom: 0.2em;
+    display: inline-block;
+}
+
+.reveal h3 {
+    font-size: 1.3em;
+    color: #555;
+}
+
+.reveal ul, .reveal ol {
+    margin-left: 1em;
+}
+
+.reveal li {
+    margin-bottom: 0.5em;
+    line-height: 1.4;
+}
+
+/* Split screen layouts */
+.split-screen {
+    display: flex;
+    justify-content: space-between;
+    gap: 2em;
+}
+
+.split-screen .left, .split-screen .right {
+    flex: 1;
+}
+
+/* Code snippets */
+.code-snippet {
+    margin: 1em 0;
+    max-height: 400px;
+    overflow-y: auto;
+    border-radius: 5px;
+    font-size: 0.8em;
+}
+
+.code-snippet pre {
+    margin: 0;
+    padding: 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Demo images */
+.demo-image {
+    max-width: 70%;
+    margin: 0 auto 1em;
+    text-align: center;
+}
+
+.demo-image img {
+    max-width: 100%;
+    max-height: 350px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.caption {
+    font-size: 0.9em;
+    font-style: italic;
+    margin-top: 0.5em;
+    color: #666;
+}
+
+/* Thank you slide */
+.thank-you {
+    margin-top: 2em;
+    text-align: center;
+}
+
+.thank-you h3 {
+    color: var(--brand-accent);
+    font-size: 1.8em;
+}
+
+/* Custom navigation controls */
+.controls {
+    color: var(--brand-primary);
+}
+
+/* Make sure links stand out */
+.reveal a {
+    color: var(--brand-accent);
+    text-decoration: none;
+}
+
+.reveal a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+    .split-screen {
+        flex-direction: column;
+    }
+    
+    .code-snippet {
+        font-size: 0.7em;
+    }
+}
